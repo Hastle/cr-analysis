@@ -1,7 +1,86 @@
+@import "mixins"
+/*==========  Fonts  ==========*/
+@import "fonts"
+/*==========  Libs  ==========*/
+@import "libs"
+
 body
-	background-color: #222
+	margin: 0
+	background-color: $white
+	color: $black
+	+regular
+.App, #root
+	min-height: 100vh
 	display: flex
-	justify-content: center
-	align-items: center
+	flex-direction: column
+a
+	color: $black
+	text-decoration: none
+	outline-style: none
+a:hover
+	text-decoration: none
+	outline-style: none
+a:focus
+	text-decoration: none
+	outline-style: none
+a:visited
+	text-decoration: none
+	outline-style: none
+img
+	display: inline-block
+	max-width: 100%
+	height: auto
+input, textarea 
+	text-decoration: none
+	outline-style: none
+	font-size: 16px
+button
+	cursor: pointer
+	background-color: transparent
+	outline-style: none
+	border: none
+button:hover
+	background-color: transparent
+	outline-style: none
+button:focus
+	background-color: transparent
+	outline-style: none
+.parallax-container
 	height: 100vh
-	color: pink
+	width: 100%
+.no-gutter > [class*='col-']
+	padding-right: 0
+	padding-left: 0
+.text-center
+	text-align: center !important
+i
+	vertical-align: middle
+/*==========  General  ==========*/
+section
+	padding: 110px 0
+	background-color: $white
+h3
+	+regular
+	text-align: center
+	font-size: 35px	
+	margin: 0 0 6rem
+	color: $black	
+h4
+	+regular
+	text-align: center
+	font-size: 20px
+p
+	color: $dark
+	+regular
+	font-size: 16px
+	text-align: center
+.mx-auto
+	margin: auto !important
+.mt-3
+	margin-top: 3rem !important
+.mb-3
+	margin-bottom: 3rem !important
+.mt-nh
+	margin-top: $nav-height !important
+/*==========  Media  ==========*/
+@import "media"
