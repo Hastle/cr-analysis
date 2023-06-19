@@ -1,1 +1,1 @@
-# Webpack 5 config for React
+# Сorrelation regression analysis
