@@ -1,10 +1,14 @@
-import React, { Component } from 'react';
+import React from 'react';
+import Sidebar from './sidebar/Sidebar';
+import Main from './main/Main';
+import Wrapper from './wrapper/Wrapper';
 
 function App() {
 	return (
-		<div>
-			<h1>Hello world!</h1>
-		</div>
+		<Wrapper>
+			<Sidebar/>
+			<Main/>
+		</Wrapper>
 	);
 }
 
