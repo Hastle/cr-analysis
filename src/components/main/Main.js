@@ -1,19 +1,56 @@
-import React from 'react';
+import React, { useState } from 'react';
+import CSVUploader from '../CSVUploader/CSVUploader';
+import InputTable from '../tables/InputTable.js';
+import IntermediateTable1 from '../tables/IntermediateTable1.js';
+import RankTable from '../tables/RankTable.js';
+
 const Main = () => {
+	const [dataArr, setDataArr] = useState(null);
+
+	const handleDataArr = (arr) => {
+		const filteredDataArr = arr.filter((point) => {
+			const x = parseInt(point.X);
+			const y = parseInt(point.Y);
+			return !isNaN(x) && !isNaN(y);
+		});
+
+		setDataArr(filteredDataArr);
+	};
+
 	return (
 		<main className="col-md-10">
-			<div className="row">
-				<div className="col-md-4">
-					<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eaque cupiditate maiores accusantium dolor sapiente, quod, doloremque repellendus et maxime necessitatibus incidunt cumque consectetur similique voluptatum pariatur, omnis adipisci facere quae?</p>
+			<div className="row justify-content-center">
+				<div className="col-md-auto">
+					<h4>Загрузка данных</h4>
+					<CSVUploader onDataArr={handleDataArr} />
 				</div>
-				<div className="col-md-4">
-					<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eaque cupiditate maiores accusantium dolor sapiente, quod, doloremque repellendus et maxime necessitatibus incidunt cumque consectetur similique voluptatum pariatur, omnis adipisci facere quae?</p>
+			</div>
+			<div className="row justify-content-center mt-3">
+				<div className="col-md-auto">
+					<h4>Таблица входных данных</h4>
+					<InputTable dataArr={dataArr} />
 				</div>
-				<div className="col-md-4">
-					<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eaque cupiditate maiores accusantium dolor sapiente, quod, doloremque repellendus et maxime necessitatibus incidunt cumque consectetur similique voluptatum pariatur, omnis adipisci facere quae?</p>
+			</div>
+			<div className="row justify-content-center mt-3">
+				<div className="col-md-auto">
+					<h4>Таблица промежуточных вычислений 1</h4>
+					<IntermediateTable1 dataArr={dataArr} />
+				</div>
+			</div>
+			<div className="row justify-content-center mt-3">
+				<div className="col-md-auto">
+					<h4>Таблица рангов</h4>
+					<RankTable dataArr={dataArr} />
+				</div>
+			</div>
+			<div className="row justify-content-center mt-3">
+				<div className="col-md-auto">
+					<h4>Таблица промежуточных вычислений 2</h4>
+					<InputTable dataArr={dataArr} />
 				</div>
 			</div>
 		</main>
 	);
-}
+};
+
 export default Main;
