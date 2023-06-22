@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import CSVUploader from '../CSVUploader/CSVUploader';
-import InputTable from '../tables/InputTable.js';
-import IntermediateTable1 from '../tables/IntermediateTable1.js';
-import RankTable from '../tables/RankTable.js';
+import InputTable from '../tables/InputTable';
+import IntermediateTable1 from '../tables/IntermediateTable1';
+import RankTable from '../tables/RankTable';
+import IntermediateTable2 from '../tables/IntermediateTable2';
+import Report from '../report/Report';
 
 const Main = () => {
 	const [dataArr, setDataArr] = useState(null);
@@ -26,27 +28,32 @@ const Main = () => {
 				</div>
 			</div>
 			<div className="row justify-content-center mt-3">
-				<div className="col-md-auto">
+				<div className="col-md-10">
 					<h4>Таблица входных данных</h4>
 					<InputTable dataArr={dataArr} />
 				</div>
 			</div>
 			<div className="row justify-content-center mt-3">
-				<div className="col-md-auto">
+				<div className="col-md-10">
 					<h4>Таблица промежуточных вычислений 1</h4>
 					<IntermediateTable1 dataArr={dataArr} />
 				</div>
 			</div>
 			<div className="row justify-content-center mt-3">
-				<div className="col-md-auto">
+				<div className="col-md-10">
 					<h4>Таблица рангов</h4>
 					<RankTable dataArr={dataArr} />
 				</div>
 			</div>
 			<div className="row justify-content-center mt-3">
-				<div className="col-md-auto">
+				<div className="col-md-10">
 					<h4>Таблица промежуточных вычислений 2</h4>
-					<InputTable dataArr={dataArr} />
+					<IntermediateTable2 dataArr={dataArr} />
+				</div>
+			</div>
+			<div className="row justify-content-center mt-3">
+				<div className="col-md-8">
+					<Report dataArr={dataArr} />
 				</div>
 			</div>
 		</main>
