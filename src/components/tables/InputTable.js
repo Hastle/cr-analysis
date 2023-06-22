@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
-import dataArrExample1 from '../../data/DataExample1.js';
+import dataArrExample1 from '../../data/DataExample1';
 
 export default function InputTable({ dataArr }) {
 	const columns = [
@@ -17,13 +17,13 @@ export default function InputTable({ dataArr }) {
 	return (
 		<div style={{ height: 630, width: '100%' }}>
 			<DataGrid
-			editMode="row"
-			rows={rows}
-			columns={columns}
-			initialState={{
-				pagination: { paginationModel: { pageSize: 10 } },
-			}}
-			pageSizeOptions={[10, 25, 50]}
+				editMode="row"
+				rows={rows}
+				columns={columns}
+				initialState={{
+					pagination: { paginationModel: { pageSize: 10 } },
+				}}
+				pageSizeOptions={[10, 25, 50]}
 			/>
 		</div>
 	);

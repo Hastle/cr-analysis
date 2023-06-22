@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
-import dataArrExample1 from '../../data/DataExample1.js';
+import dataArrExample1 from '../../data/DataExample1';
 
 export default function IntermediateTable1({ dataArr }) {
 	const columns = [
@@ -75,6 +75,9 @@ export default function IntermediateTable1({ dataArr }) {
 	}
 
 	const rows = calculateValues(dataArr);
+
+/*	const sums = rows.find((obj) => obj.id === 'Сумма');
+	const averages = rows.find((obj) => obj.id === 'Среднее');*/
 
 	return (
 		<div style={{ height: 630, width: '100%' }}>
