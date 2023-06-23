@@ -11,8 +11,10 @@ const Report = ({ dataArr }) => {
 
 	const { standardDeviationX, standardDeviationY } = calculateStandardDeviation(dataArr);
 	const correlationCoefficient = calculateCorrelationCoefficient(dataArr);
-	const interpretation = interpretCorrelationCoefficient(correlationCoefficient);
+	const interpretationCorrelation = interpretCorrelation(correlationCoefficient);
 	const errorOfCorrelation = calculateMeanErrorOfCorrelationCoefficient(correlationCoefficient);
+	const spearmanCoefficient = calculateSpearmanCoefficient(dataArr);
+	const interpretationSpearman = interpretCorrelation(spearmanCoefficient);
 
 	function calculateStandardDeviation(dataArr) {
 		const xValues = dataArr.map(item => item.X);
@@ -55,7 +57,7 @@ const Report = ({ dataArr }) => {
 		return correlationCoefficient;
 	}
 
-	function interpretCorrelationCoefficient(correlationCoefficient) {
+	function interpretCorrelation(correlationCoefficient) {
 		let result = "";
 
 		if (correlationCoefficient > 0.7) {
@@ -103,25 +105,30 @@ const Report = ({ dataArr }) => {
 		if (n < 30) {
 			if (tValue > tTable) {
 				result = "значим";
-				console.log(1);
 			} else {
 				result = "незначим";
-				console.log(2);
 			}
 		} else {
 			if (tValue > 3) {
 				result = "значим";
-				console.log(3);
 			} else {
 				result = "незначим";
-				console.log(4);
 			}
 		}
 		return result;
 	}
 
+	function calculateSpearmanCoefficient(dataArr) {
+		const n = dataArr.length;
+		let result = 0;
+		let sumD2 = 0;
+		for (let i = 0; i < dataArr.length; i++) {
+			sumD2 += dataArr[i]['d^2'];
+		}
+		result = Number((1 - (6 * sumD2) / (n * (Math.pow(n, 2) - 1))).toFixed(3));
+		return result;
+	}
 
-	console.log("t-табличное:", tTable, "t-рачетное", tValue);
 
 	return (
 		<div>
@@ -130,7 +137,7 @@ const Report = ({ dataArr }) => {
 			<p>Среднеквадратичное отклонение для признака Y: {standardDeviationY}</p>
 			<br/>
 			<p>Линейный коэффициент корреляции: {correlationCoefficient}</p>
-			<p>Связь между признаками X и Y по коэффициенту корреляции: {interpretation}</p>
+			<p>Связь между признаками X и Y по коэффициенту корреляции: {interpretationCorrelation}</p>
 			<br/>
 			<p>Средняя ошибка коэффициента корреляции: {errorOfCorrelation}</p>
 			<p>Проверка коэффициента корреляции на значимость: {tValue}</p>
@@ -140,8 +147,8 @@ const Report = ({ dataArr }) => {
 			<p>t - таблицы: {tTable}</p>
 			<p>Коэффициент корреляции: {significance}</p>
 			<br/>
-			<p>Коэффициент Спирмена:</p>
-			<p>Связь между признаками X и Y по коэффициенту Спирмена:</p>
+			<p>Коэффициент Спирмена: {spearmanCoefficient}</p>
+			<p>Связь между признаками X и Y по коэффициенту Спирмена: {interpretationSpearman}</p>
 			<br/>
 			<p>Эластичность:</p>
 			<br/>
