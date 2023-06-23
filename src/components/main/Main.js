@@ -15,7 +15,6 @@ const Main = () => {
 			const y = parseInt(point.Y);
 			return !isNaN(x) && !isNaN(y);
 		});
-
 		setDataArr(filteredDataArr);
 	};
 
