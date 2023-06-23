@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as jstat from 'jstat';
 import Styles from './report.sass';
 import dataArrExample1 from '../../data/DataExample1';
 
@@ -83,12 +84,44 @@ const Report = ({ dataArr }) => {
 			const meanError = Number(Math.sqrt((1 - Math.pow(correlationCoefficient, 2)) / (n - 2)).toFixed(3));
 			return meanError;
 		} else {
-			const meanError = Number((1 - Math.pow(correlationCoefficient, 2)) / Math.sqrt(n)).toFixed(3);
+			const meanError = parseFloat(Number((1 - Math.pow(correlationCoefficient, 2)) / Math.sqrt(n)).toFixed(3));
 			return meanError;
 		}
 	}
 
-	console.log(errorOfCorrelation);
+	const alpha = 0.05;  // Уровень значимости
+
+	const tTable = Number((jstat.studentt.inv(1 - alpha / 2, dataArr.length - 2)).toFixed(3));
+
+	const tValue = Number((Math.abs(correlationCoefficient) / errorOfCorrelation).toFixed(3));
+
+	const significance = significanceLevel(tTable, tValue, dataArr);
+	function significanceLevel(tTable, tValue, dataArr) {
+		let result = "";
+		const n = dataArr.length;
+
+		if (n < 30) {
+			if (tValue > tTable) {
+				result = "значим";
+				console.log(1);
+			} else {
+				result = "незначим";
+				console.log(2);
+			}
+		} else {
+			if (tValue > 3) {
+				result = "значим";
+				console.log(3);
+			} else {
+				result = "незначим";
+				console.log(4);
+			}
+		}
+		return result;
+	}
+
+
+	console.log("t-табличное:", tTable, "t-рачетное", tValue);
 
 	return (
 		<div>
@@ -100,12 +133,12 @@ const Report = ({ dataArr }) => {
 			<p>Связь между признаками X и Y по коэффициенту корреляции: {interpretation}</p>
 			<br/>
 			<p>Средняя ошибка коэффициента корреляции: {errorOfCorrelation}</p>
-			<p>Проверка коэффициента корреляции на значимость:</p>
+			<p>Проверка коэффициента корреляции на значимость: {tValue}</p>
 			<br/>
-			<p>Уровень значимости:</p>
+			<p>Уровень значимости: {alpha}</p>
 			<br/>
-			<p>t - таблицы:</p>
-			<p>Коэффициент корреляции:</p>
+			<p>t - таблицы: {tTable}</p>
+			<p>Коэффициент корреляции: {significance}</p>
 			<br/>
 			<p>Коэффициент Спирмена:</p>
 			<p>Связь между признаками X и Y по коэффициенту Спирмена:</p>
