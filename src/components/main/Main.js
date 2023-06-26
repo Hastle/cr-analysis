@@ -56,11 +56,13 @@ const Main = () => {
 			</div>
 			<div className="row justify-content-center mt-3">
 				<div className="col-md-8">
+					<h4>Параметры анализа</h4>
 					<Report dataArr={dataArr} />
 				</div>
 			</div>
 			<div className="row justify-content-center mt-3">
 				<div className="col-md-8">
+					<h4>Визуализация данных</h4>
 					<Visualization dataArr={dataArr} type={type} regressionEquation={regressionEquation}/>
 				</div>
 			</div>
