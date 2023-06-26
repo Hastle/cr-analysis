@@ -4,6 +4,7 @@ import Styles from './report.sass';
 import dataArrExample1 from '../../data/DataExample1';
 
 const calculateReport = (dataArr) => {
+
 	const calculateStandardDeviation = (values) => {
 		const n = values.length;
 		const mean = values.reduce((sum, value) => sum + value, 0) / n;
@@ -27,15 +28,26 @@ const calculateReport = (dataArr) => {
 	};
 
 	const calculateRegressionCoefficients = (xValues, yValues) => {
-		// Расчет коэффициентов линейной регрессии (a0 и a1)
 		const n = xValues.length;
-		const sumX = jstat.sum(xValues);
-		const sumY = jstat.sum(yValues);
-		const sumXY = jstat.sum(jstat.multiply(xValues, yValues));
-		const sumXX = jstat.sum(jstat.multiply(xValues, xValues));
+		let sumX = 0;
+		let sumY = 0;
+		let sumXY = 0;
+		let sumXX = 0;
+
+		for (let i = 0; i < n; i++) {
+			const x = xValues[i];
+			const y = yValues[i];
+
+			sumX += x;
+			sumY += y;
+			sumXY += x * y;
+			sumXX += x * x;
+		}
 
 		const a1 = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX);
 		const a0 = (sumY - a1 * sumX) / n;
+
+		console.log(a0, a1);
 
 		return { a0, a1 };
 	};
@@ -109,9 +121,9 @@ const calculateReport = (dataArr) => {
 
 	const calculateMeanApproximationError = (xValues, yValues, a0, a1) => {
 		const predictedYValues = xValues.map((x) => a0 + a1 * x);
-		const differences = predictedYValues.map((predictedY, index) => predictedY - yValues[index]);
-		const sumSquaredDifferences = differences.reduce((sum, difference) => sum + Math.pow(difference, 2), 0);
-		const meanApproximationError = Math.sqrt(sumSquaredDifferences / xValues.length);
+		const squaredDifferences = predictedYValues.map((predictedY, index) => Math.pow(predictedY - yValues[index], 2));
+		const sumSquaredDifferences = squaredDifferences.reduce((sum, difference) => sum + difference, 0);
+		const meanApproximationError = Math.sqrt(sumSquaredDifferences / predictedYValues.length);
 		return meanApproximationError;
 	};
 
@@ -269,6 +281,8 @@ const calculateReport = (dataArr) => {
 		theoreticalCoefficientOfDetermination,
 		theoreticalCorrelationRatio,
 		regressionEquation,
+		a0,
+		a1,
 		standardErrorA0,
 		standardErrorA1,
 		tValueA0,
@@ -287,27 +301,54 @@ const Report = ({ dataArr }) => {
 	// Вычисляем результаты анализа
 	const reportData = calculateReport(dataArr);
 
+	const roundToThreeDecimals = (value) => {
+		return Number(value.toFixed(3));
+	};
+
 	return (
 		<div>
-			<h4>Отчет</h4>
-			<p>Среднеквадратичное отклонение для признака X: {reportData.standardDeviationX}</p>
-			<p>Среднеквадратичное отклонение для признака Y: {reportData.standardDeviationY}</p>
-			<p>Линейный коэффициент корреляции: {reportData.correlationCoefficient}</p>
+			<h4>Отчёт</h4>
+			<p>Среднеквадратичное отклонение для признака X: {roundToThreeDecimals(reportData.standardDeviationX)}</p>
+			<p>Среднеквадратичное отклонение для признака Y: {roundToThreeDecimals(reportData.standardDeviationY)}</p>
+			<br/>
+			<p>Линейный коэффициент корреляции: {roundToThreeDecimals(reportData.correlationCoefficient)}</p>
 			<p>Связь между признаками X и Y по коэффициенту корреляции: {reportData.correlationInterpretation}</p>
-			<p>Средняя ошибка коэффициента корреляции: {reportData.meanErrorOfCorrelationCoefficient}</p>
+			<br/>
+			<p>Средняя ошибка коэффициента корреляции: {roundToThreeDecimals(reportData.meanErrorOfCorrelationCoefficient)}</p>
 			<p>Проверка коэффициента корреляции на значимость:</p>
 			{reportData.isCorrelationSignificant ? (
 				<p>Коэффициент корреляции является значимым</p>
 				) : (
 				<p>Коэффициент корреляции не является значимым</p>
 				)}
-			<p>Коэффициент Спирмена: {reportData.spearmanCoefficient}</p>
+			<br/>
+			<p>Коэффициент Спирмена: {roundToThreeDecimals(reportData.spearmanCoefficient)}</p>
 			<p>Связь между признаками X и Y по коэффициенту Спирмена: {reportData.spearmanInterpretation}</p>
-			<p>Эластичность: {reportData.elasticity}</p>
-			<p>Средняя ошибка аппроксимации: {reportData.meanApproximationError}</p>
-			<p>Общая дисперсия: {reportData.totalVariance}</p>
-			<p>Факторная дисперсия: {reportData.factorVariance}</p>
-			<p>Остаточная дисперсия: {reportData.residualVariance}</p>
+			<br/>
+			<p>Эластичность: {roundToThreeDecimals(reportData.elasticity)}</p>
+			<br/>
+			<p>Средняя ошибка аппроксимации: {roundToThreeDecimals(reportData.meanApproximationError)}</p>
+			<p>Общая дисперсия: {roundToThreeDecimals(reportData.totalVariance)}</p>
+			<p>Факторная дисперсия: {roundToThreeDecimals(reportData.factorVariance)}</p>
+			<p>Остаточная дисперсия: {(reportData.residualVariance)}</p>
+			<br/>
+			<p>Теоретический коэффициент детерминации: {roundToThreeDecimals(reportData.theoreticalCoefficientOfDetermination)}</p>
+			<p>Теоретическое корреляционное отношение: {roundToThreeDecimals(reportData.theoreticalCorrelationRatio)}</p>
+			<br/>
+			<p>Уравнение регрессии: {reportData.regressionEquation}</p>
+			<br/>
+			<p>Параметр a0: {roundToThreeDecimals(reportData.a0)}</p>
+			<p>Параметр a1: {roundToThreeDecimals(reportData.a1)}</p>
+			<br/>
+			<p>Средняя ошибка параметров a0: {roundToThreeDecimals(reportData.standardErrorA0)}</p>
+			<p>Средняя ошибка параметров a1: {roundToThreeDecimals(reportData.standardErrorA1)}</p>
+			<br/>
+			<p>t a0: {roundToThreeDecimals(reportData.tValueA0)}</p>
+			<p>t a1: {roundToThreeDecimals(reportData.tValueA1)}</p>
+			<br/>
+			<p>F-критерий Фишера: {roundToThreeDecimals(reportData.fisherCriterion)}</p>
+			<br/>
+			<p>Уровень значений F-таблицы: {reportData.fTableValue}</p>
 		</div>
 	);
 };
