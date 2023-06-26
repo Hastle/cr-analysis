@@ -1,9 +1,11 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import * as jstat from 'jstat';
 import Styles from './report.sass';
 import dataArrExample1 from '../../data/DataExample1';
+import SelectAlpha from '../inputs/SelectAlpha';
+import TableValueInput from '../inputs/TableValueInput';
 
-const calculateReport = (dataArr) => {
+const calculateReport = (dataArr, alpha) => {
 
 	const calculateStandardDeviation = (values) => {
 		const n = values.length;
@@ -47,8 +49,6 @@ const calculateReport = (dataArr) => {
 		const a1 = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX);
 		const a0 = (sumY - a1 * sumX) / n;
 
-		console.log(a0, a1);
-
 		return { a0, a1 };
 	};
 
@@ -77,6 +77,34 @@ const calculateReport = (dataArr) => {
 			return Math.sqrt((1 - Math.pow(correlationCoefficient, 2)) / Math.sqrt(n));
 		}
 	};
+
+	const calculateCorrelationSignificant = (correlationCoefficient, meanErrorOfCorrelationCoefficient) => {
+		return Math.abs(correlationCoefficient) / (meanErrorOfCorrelationCoefficient);
+	};
+
+	const calculateTTable = (alpha, n) => {
+		return jstat.studentt.inv(1 - alpha / 2, n - 2);
+	};
+
+	const significanceLevel = (tTable, correlationSignificant, dataArr) => {
+		let result = "";
+		const n = dataArr.length;
+
+		if (n < 30) {
+			if (correlationSignificant > tTable) {
+				result = "значим";
+			} else {
+				result = "незначим";
+			}
+		} else {
+			if (correlationSignificant > 3) {
+				result = "значим";
+			} else {
+				result = "незначим";
+			}
+		}
+		return result;
+	}
 
 	const calculateSpearmanCoefficient = (dataArr) => {
 		const sortedX = dataArr.map((item) => item.X).sort((a, b) => a - b);
@@ -194,7 +222,7 @@ const calculateReport = (dataArr) => {
 			}
 		}
 		return null;
-};
+	};
 
 	// Extract X and Y values from dataArr
 	const xValues = dataArr.map((item) => item.X);
@@ -217,8 +245,12 @@ const calculateReport = (dataArr) => {
 	// Calculate mean error of correlation coefficient
 	const meanErrorOfCorrelationCoefficient = calculateMeanErrorOfCorrelationCoefficient(correlationCoefficient, dataArr.length);
 
+	const correlationSignificant = calculateCorrelationSignificant(correlationCoefficient, meanErrorOfCorrelationCoefficient);
+	
+	const tTable = calculateTTable(alpha, dataArr.length);
+
+	const significance = significanceLevel(tTable, correlationSignificant, dataArr);
 	// Check significance of correlation coefficient
-	const isCorrelationSignificant = correlationCoefficient !== 0;
 
 	// Calculate Spearman coefficient
 	const spearmanCoefficient = calculateSpearmanCoefficient(dataArr);
@@ -261,7 +293,7 @@ const calculateReport = (dataArr) => {
 	const fisherCriterion = calculateFisherCriterion(factorVariance, residualVariance, 2, dataArr.length);
 
 	// Calculate F-table value
-	const fTableValue = getFTableValue(0.05, 2, dataArr.length);
+	const fTableValue = getFTableValue(alpha, 2, dataArr.length);
 
 	// Return the report object
 	return {
@@ -270,7 +302,10 @@ const calculateReport = (dataArr) => {
 		correlationCoefficient,
 		correlationInterpretation,
 		meanErrorOfCorrelationCoefficient,
-		isCorrelationSignificant,
+		correlationSignificant,
+		alpha,
+		tTable,
+		significance,
 		spearmanCoefficient,
 		spearmanInterpretation,
 		elasticity,
@@ -298,8 +333,14 @@ const Report = ({ dataArr }) => {
 		dataArr = dataArrExample1;
 	}
 
+	const [selectedAlpha, setSelectedAlpha] = useState(0.05);
+
+	const handleAlphaChange = (alpha) => {
+		setSelectedAlpha(alpha);
+		calculateReport(dataArr, selectedAlpha);
+	};
 	// Вычисляем результаты анализа
-	const reportData = calculateReport(dataArr);
+	const reportData = calculateReport(dataArr, selectedAlpha);
 
 	const roundToThreeDecimals = (value) => {
 		return Number(value.toFixed(3));
@@ -307,7 +348,6 @@ const Report = ({ dataArr }) => {
 
 	return (
 		<div>
-			<h4>Отчёт</h4>
 			<p>Среднеквадратичное отклонение для признака X: {roundToThreeDecimals(reportData.standardDeviationX)}</p>
 			<p>Среднеквадратичное отклонение для признака Y: {roundToThreeDecimals(reportData.standardDeviationY)}</p>
 			<br/>
@@ -315,12 +355,11 @@ const Report = ({ dataArr }) => {
 			<p>Связь между признаками X и Y по коэффициенту корреляции: {reportData.correlationInterpretation}</p>
 			<br/>
 			<p>Средняя ошибка коэффициента корреляции: {roundToThreeDecimals(reportData.meanErrorOfCorrelationCoefficient)}</p>
-			<p>Проверка коэффициента корреляции на значимость:</p>
-			{reportData.isCorrelationSignificant ? (
-				<p>Коэффициент корреляции является значимым</p>
-				) : (
-				<p>Коэффициент корреляции не является значимым</p>
-				)}
+			<p>Проверка коэффициента корреляции на значимость: {roundToThreeDecimals(reportData.correlationSignificant)}</p>
+			<p className="inline-flex">Уровень значимости: </p>
+			<SelectAlpha selectedAlpha={selectedAlpha} onAlphaChange={handleAlphaChange} />
+			<p>t - таблицы: {roundToThreeDecimals(reportData.tTable)}</p>
+			<p>Коэффициент корреляции: {reportData.significance}</p>
 			<br/>
 			<p>Коэффициент Спирмена: {roundToThreeDecimals(reportData.spearmanCoefficient)}</p>
 			<p>Связь между признаками X и Y по коэффициенту Спирмена: {reportData.spearmanInterpretation}</p>
@@ -330,7 +369,7 @@ const Report = ({ dataArr }) => {
 			<p>Средняя ошибка аппроксимации: {roundToThreeDecimals(reportData.meanApproximationError)}</p>
 			<p>Общая дисперсия: {roundToThreeDecimals(reportData.totalVariance)}</p>
 			<p>Факторная дисперсия: {roundToThreeDecimals(reportData.factorVariance)}</p>
-			<p>Остаточная дисперсия: {(reportData.residualVariance)}</p>
+			<p>Остаточная дисперсия: {(roundToThreeDecimals(reportData.residualVariance))}</p>
 			<br/>
 			<p>Теоретический коэффициент детерминации: {roundToThreeDecimals(reportData.theoreticalCoefficientOfDetermination)}</p>
 			<p>Теоретическое корреляционное отношение: {roundToThreeDecimals(reportData.theoreticalCorrelationRatio)}</p>
@@ -348,7 +387,8 @@ const Report = ({ dataArr }) => {
 			<br/>
 			<p>F-критерий Фишера: {roundToThreeDecimals(reportData.fisherCriterion)}</p>
 			<br/>
-			<p>Уровень значений F-таблицы: {reportData.fTableValue}</p>
+			<p className="inline-flex">Уровень значений F-таблицы: </p>
+			<TableValueInput/>
 		</div>
 	);
 };
