@@ -52,7 +52,6 @@ function CSVUploader({ onDataArr }) {
 			});
 		}
 
-		console.log(dataArr);
 		return dataArr;
 	};
 
