@@ -27,7 +27,7 @@ const Visualization = ({ dataArr, type, regressionEquation }) => {
 			switch (type) {
 				case 'straight':
 				return dataArr.map((item) => ({ x: item.X, y: item.Y }));
-
+				// ({x: item.X, y: (-32.204) + 0.572 * item.X})) для valid data
 				case 'parabola':
 				return dataArr.map((item) => ({ x: item.X, y: item.X * item.X }));
 
@@ -57,8 +57,8 @@ const Visualization = ({ dataArr, type, regressionEquation }) => {
 					data: chartData,
 					backgroundColor: 'rgba(75, 192, 192, 1)',
 					borderColor: 'rgba(75, 192, 192, 1)',
-					pointRadius: 3,
-					pointHoverRadius: 3,
+					pointRadius: 2,
+					pointHoverRadius: 2,
 				},
 				],
 			},
