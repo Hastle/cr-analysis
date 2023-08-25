@@ -5,10 +5,10 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
 export default function SelectSmall() {
-	const [age, setAge] = React.useState('');
+	const [value, setValue] = React.useState('');
 
 	const handleChange = (event) => {
-		setAge(event.target.value);
+		setValue(event.target.value);
 	};
 
 	return (
