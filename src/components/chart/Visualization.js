@@ -1,65 +1,59 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import dataArrExample1 from '../../data/DataExample1';
 import { Chart, registerables } from 'chart.js';
+import ChartTypeInput from '../inputs/ChartTypeInput';
 
-const Visualization = ({ dataArr, type, regressionEquation }) => {
+const Visualization = ({ dataArr, onRegressionTypeChange }) => {
 	const chartRef = useRef(null);
 	const chartInstance = useRef(null);
 
-	if (dataArr === null || dataArr.length === 0) {
+	if (!dataArr || dataArr.length === 0) {
 		dataArr = dataArrExample1;
 	}
 
-	console.log(dataArr);
+	const [selectedType, setSelectedType] = useState('straight');
 
 	useEffect(() => {
 		const ctx = chartRef.current.getContext('2d');
 
-	// Удаление предыдущего графика, если он существует
-	if (chartInstance.current) {
-		chartInstance.current.destroy();
-	}
-		// Регистрация необходимых контроллеров и плагинов
+		if (chartInstance.current) {
+			chartInstance.current.destroy();
+		}
+
 		Chart.register(...registerables);
 
-		// Определение функции, которая генерирует данные для заданного типа графика
-		const generateData = (type) => {
-			switch (type) {
+		const generateData = () => {
+			switch (selectedType) {
 				case 'straight':
-				return dataArr.map((item) => ({ x: item.X, y: item.Y }));
-				// ({x: item.X, y: (-32.204) + 0.572 * item.X})) для valid data
+					return dataArr.map((item) => ({ x: item.X, y: item.Y }));
 				case 'parabola':
-				return dataArr.map((item) => ({ x: item.X, y: item.X * item.X }));
-
+					return dataArr.map((item) => ({ x: item.X, y: item.X * item.X }));
 				case 'exponential':
-				return dataArr.map((item) => ({ x: item.X, y: Math.exp(item.X) }));
-
+					return dataArr.map((item) => ({ x: item.X, y: Math.exp(item.X) }));
 				case 'hyperbola':
-				return dataArr.map((item) => ({ x: item.X, y: 1 / item.X }));
-
+					return dataArr.map((item) => ({ x: item.X, y: 1 / item.X }));
 				case 'logarithmic':
-				return dataArr.map((item) => ({ x: item.X, y: Math.log(item.X) }));
-
+					return dataArr.map((item) => ({ x: item.X, y: Math.log(item.X) }));
 				default:
-				return [];
+					return [];
 			}
 		};
-		// Генерация данных для выбранного типа графика
-		const chartData = generateData(type);
 
-		// Конфигурация графика
+		const chartData = generateData();
+
 		const chartConfig = {
 			type: 'scatter',
 			data: {
 				datasets: [
-				{
-					label: type,
-					data: chartData,
-					backgroundColor: 'rgba(75, 192, 192, 1)',
-					borderColor: 'rgba(75, 192, 192, 1)',
-					pointRadius: 2,
-					pointHoverRadius: 2,
-				},
+					{
+						type: 'scatter',
+						label: 'Входные X и Y',
+						data: chartData,
+						backgroundColor: 'rgba(75, 192, 192, 1)',
+						borderColor: 'rgba(75, 192, 192, 1)',
+						pointRadius: 3,
+						pointHoverRadius: 3,
+					},
 				],
 			},
 			options: {
@@ -73,25 +67,30 @@ const Visualization = ({ dataArr, type, regressionEquation }) => {
 						type: 'linear',
 					},
 				},
-				plugins: {
-					title: {
-						display: true,
-						text: regressionEquation,
-					},
-				},
 			},
 		};
+
 		chartInstance.current = new Chart(ctx, chartConfig);
+
 		return () => {
-			// Очистка: уничтожение экземпляра графика при размонтировании компонента
 			if (chartInstance.current) {
 				chartInstance.current.destroy();
 				chartInstance.current = null;
 			}
 		};
-	}, [dataArr, type, regressionEquation]);
+	}, [dataArr, selectedType]);
 
-	return <canvas ref={chartRef} />;
+	const handleTypeChange = (type) => {
+		setSelectedType(type);
+		onRegressionTypeChange(type); // Передача типа регрессии в родительский компонент
+	};
+
+	return (
+		<>
+			<ChartTypeInput selectedType={selectedType} onTypeChange={handleTypeChange} />
+			<canvas ref={chartRef} />
+		</>
+	);
 };
 
 export default Visualization;
