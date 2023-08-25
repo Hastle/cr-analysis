@@ -5,7 +5,7 @@ import dataArrExample1 from '../../data/DataExample1';
 import SelectAlpha from '../inputs/SelectAlpha';
 import TableValueInput from '../inputs/TableValueInput';
 
-const calculateReport = (dataArr, alpha) => {
+const calculateReport = (dataArr, alpha, regressionType) => {
 
 	const calculateStandardDeviation = (values) => {
 		const n = values.length;
@@ -185,8 +185,20 @@ const calculateReport = (dataArr, alpha) => {
 		return Math.sqrt(theoreticalCoefficientOfDetermination);
 	};
 
-	const calculateRegressionEquation = (a0, a1) => {
-		return `f(x) = ${a0} + ${a1} * x`;
+	const calculateRegressionEquation = (a0, a1, regressionType) => {
+		if (regressionType === 'straight') {
+			return `f(x) = ${a0} + ${a1} * x`;
+		} else if (regressionType === 'parabola') {
+			return `f(x) = ${a0} + ${a1} * x^2`;
+		} else if (regressionType === 'exponential') {
+			return `f(x) = ${a0} * e^(${a1} * x)`;
+		} else if (regressionType === 'hyperbola') {
+			return `f(x) = ${a0} + ${a1} / x`;
+		} else if (regressionType === 'logarithmic') {
+			return `f(x) = ${a0} + ${a1} * ln(x)`;
+		} else {
+			return 'Неизвестный тип регрессии';
+		}
 	};
 
 	const calculateStandardErrorOfParameters = (xValues, yValues, a0, a1) => {
@@ -246,7 +258,7 @@ const calculateReport = (dataArr, alpha) => {
 	const meanErrorOfCorrelationCoefficient = calculateMeanErrorOfCorrelationCoefficient(correlationCoefficient, dataArr.length);
 
 	const correlationSignificant = calculateCorrelationSignificant(correlationCoefficient, meanErrorOfCorrelationCoefficient);
-	
+
 	const tTable = calculateTTable(alpha, dataArr.length);
 
 	const significance = significanceLevel(tTable, correlationSignificant, dataArr);
@@ -280,7 +292,7 @@ const calculateReport = (dataArr, alpha) => {
 	const theoreticalCorrelationRatio = calculateTheoreticalCorrelationRatio(theoreticalCoefficientOfDetermination);
 
 	// Calculate regression equation
-	const regressionEquation = calculateRegressionEquation(a0, a1);
+	const regressionEquation = calculateRegressionEquation(a0, a1, regressionType);
 
 	// Calculate standard errors of parameters
 	const [standardErrorA0, standardErrorA1] = calculateStandardErrorOfParameters(xValues, yValues, a0, a1);
@@ -327,8 +339,8 @@ const calculateReport = (dataArr, alpha) => {
 	};
 };
 
-const Report = ({ dataArr }) => {
-	
+const Report = ({ dataArr, regressionType }) => {
+
 	if (dataArr === null || dataArr.length === 0) {
 		dataArr = dataArrExample1;
 	}
@@ -340,7 +352,7 @@ const Report = ({ dataArr }) => {
 		calculateReport(dataArr, selectedAlpha);
 	};
 	// Вычисляем результаты анализа
-	const reportData = calculateReport(dataArr, selectedAlpha);
+	const reportData = calculateReport(dataArr, selectedAlpha, regressionType);
 
 	const roundToThreeDecimals = (value) => {
 		return Number(value.toFixed(3));
