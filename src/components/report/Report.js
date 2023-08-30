@@ -185,17 +185,17 @@ const calculateReport = (dataArr, alpha, regressionType) => {
 		return Math.sqrt(theoreticalCoefficientOfDetermination);
 	};
 
-	const calculateRegressionEquation = (a0, a1, regressionType) => {
+	const calculateRegressionEquation = (regressionType) => {
 		if (regressionType === 'straight') {
-			return `f(x) = ${a0} + ${a1} * x`;
+			return `f(x) = a0 + a1 * x`;
 		} else if (regressionType === 'parabola') {
-			return `f(x) = ${a0} + ${a1} * x^2`;
+			return `f(x) = a0 + a1 * x + a2 * x ^ 2`;
 		} else if (regressionType === 'exponential') {
-			return `f(x) = ${a0} * e^(${a1} * x)`;
+			return `f(x) = a0 * a1 ^ x`;
 		} else if (regressionType === 'hyperbola') {
-			return `f(x) = ${a0} + ${a1} / x`;
+			return `f(x) = a0 + a1 / x`;
 		} else if (regressionType === 'logarithmic') {
-			return `f(x) = ${a0} + ${a1} * ln(x)`;
+			return `f(x) = a0 + a1 * ln(x)`;
 		} else {
 			return 'Неизвестный тип регрессии';
 		}
@@ -292,7 +292,7 @@ const calculateReport = (dataArr, alpha, regressionType) => {
 	const theoreticalCorrelationRatio = calculateTheoreticalCorrelationRatio(theoreticalCoefficientOfDetermination);
 
 	// Calculate regression equation
-	const regressionEquation = calculateRegressionEquation(a0, a1, regressionType);
+	const regressionEquation = calculateRegressionEquation(regressionType);
 
 	// Calculate standard errors of parameters
 	const [standardErrorA0, standardErrorA1] = calculateStandardErrorOfParameters(xValues, yValues, a0, a1);
