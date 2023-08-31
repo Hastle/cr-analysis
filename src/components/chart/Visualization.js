@@ -6,6 +6,8 @@ import ChartTypeInput from '../inputs/ChartTypeInput';
 const Visualization = ({ dataArr, onRegressionTypeChange }) => {
 	const chartRef = useRef(null);
 	const chartInstance = useRef(null);
+	const containerRef = useRef(null);
+	const [savedCanvasPosition, setSavedCanvasPosition] = useState({ left: 0, top: 0 });
 
 	if (!dataArr || dataArr.length === 0) {
 		dataArr = dataArrExample1;
@@ -72,6 +74,11 @@ const Visualization = ({ dataArr, onRegressionTypeChange }) => {
 
 		chartInstance.current = new Chart(ctx, chartConfig);
 
+		if (containerRef.current) {
+			containerRef.current.style.width = chartRef.current.width + 'px';
+			containerRef.current.style.height = chartRef.current.height + 'px';
+		}
+
 		return () => {
 			if (chartInstance.current) {
 				chartInstance.current.destroy();
@@ -82,13 +89,31 @@ const Visualization = ({ dataArr, onRegressionTypeChange }) => {
 
 	const handleTypeChange = (type) => {
 		setSelectedType(type);
-		onRegressionTypeChange(type); // Передача типа регрессии в родительский компонент
+		onRegressionTypeChange(type);
 	};
+
+	const handleCanvasSizeChange = () => {
+		if (containerRef.current) {
+			setSavedCanvasPosition({
+				left: containerRef.current.scrollLeft,
+				top: containerRef.current.scrollTop,
+			});
+		}
+	};
+
+	useEffect(() => {
+		if (containerRef.current) {
+			containerRef.current.scrollLeft = savedCanvasPosition.left;
+			containerRef.current.scrollTop = savedCanvasPosition.top;
+		}
+	}, [savedCanvasPosition]);
 
 	return (
 		<>
 			<ChartTypeInput selectedType={selectedType} onTypeChange={handleTypeChange} />
-			<canvas ref={chartRef} />
+			<div ref={containerRef} onScroll={handleCanvasSizeChange}>
+				<canvas className="main-chart" ref={chartRef} />
+			</div>
 		</>
 	);
 };
