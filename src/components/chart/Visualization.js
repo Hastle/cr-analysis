@@ -74,11 +74,6 @@ const Visualization = ({ dataArr, onRegressionTypeChange }) => {
 
 		chartInstance.current = new Chart(ctx, chartConfig);
 
-		if (containerRef.current) {
-			containerRef.current.style.width = chartRef.current.width + 'px';
-			containerRef.current.style.height = chartRef.current.height + 'px';
-		}
-
 		return () => {
 			if (chartInstance.current) {
 				chartInstance.current.destroy();
