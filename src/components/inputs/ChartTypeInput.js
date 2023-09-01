@@ -18,6 +18,9 @@ export default function ChartTypeInput({ selectedType, onTypeChange }) {
                 defaultValue={'straight'}
                 label="Функция"
                 onChange={handleChange}
+                // MenuProps={{
+                //     disableScrollLock: false,
+                // }}
             >
                 <MenuItem value={'straight'}>Прямая</MenuItem>
                 <MenuItem value={'parabola'}>Парабола</MenuItem>
