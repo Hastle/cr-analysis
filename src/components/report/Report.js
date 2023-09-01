@@ -124,6 +124,7 @@ const calculateReport = (dataArr, alpha, regressionType) => {
 		regressionEquation,
 		a0,
 		a1,
+		a2,
 		standardErrorA0,
 		standardErrorA1,
 		tValueA0,
@@ -184,7 +185,7 @@ const Report = ({ dataArr, regressionType }) => {
 			<p>Параметр a0: {roundToThreeDecimals(reportData.a0)}</p>
 			<p>Параметр a1: {roundToThreeDecimals(reportData.a1)}</p>
 			{regressionType === 'parabola' && (
-				<p>Параметр a2: {Number(reportData.a2)}</p>
+				<p>Параметр a2: {roundToThreeDecimals(reportData.a2)}</p>
 			)}
 			<br/>
 			<p>Средняя ошибка параметров a0: {roundToThreeDecimals(reportData.standardErrorA0)}</p>
