@@ -23,12 +23,14 @@ const calculateRegressionCoefficients = (xValues, yValues, regressionType) => {
         a1 = (n * sumXY - sumX * sumY) / determinant;
         a0 = (sumY - a1 * sumX) / n;
     } else if (regressionType === 'parabola') {
-
+        a0 = 0;
+        a1 = 0;
+        a2 = 0;
     } else if (regressionType === 'exponential') {
         let sumXlnY = 0;
         let sumXX = 0;
         let sumX = 0;
-        let sumLnY = 0;
+        let sumlnY = 0;
 
         for (let i = 0; i < n; i++) {
             const x = xValues[i];
@@ -38,15 +40,14 @@ const calculateRegressionCoefficients = (xValues, yValues, regressionType) => {
             sumXlnY += x * lnY;
             sumXX += x * x;
             sumX += x;
-            sumLnY += lnY;
+            sumlnY += lnY;
         }
 
-        const denominator = n * sumXX - sumX * sumX;
-        const a1_numerator = n * sumXlnY - sumX * sumLnY;
-        const a0_numerator = sumXX * sumLnY - sumX * sumXlnY;
+        const lnA1 = (n * sumXlnY - sumX * sumlnY) / (n * sumXX - sumX * sumX);
+        const lnA0 = (sumlnY - lnA1 * sumX) / n;
 
-        a1 = a1_numerator / denominator;
-        a0 = Math.exp(a0_numerator / denominator);
+        a1 = Math.exp(lnA1);
+        a0 = Math.exp(lnA0);
     }
     else if (regressionType === 'hyperbola') {
         for (let i = 0; i < n; i++) {
