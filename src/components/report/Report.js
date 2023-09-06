@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Styles from './report.sass';
 import dataArrExample1 from '../../data/DataExample1';
 import SelectAlpha from '../inputs/SelectAlpha';
@@ -134,23 +134,37 @@ const calculateReport = (dataArr, alpha, regressionType) => {
 	};
 };
 
-const Report = ({ dataArr, regressionType }) => {
+const Report = ({ dataArr, regressionType, onUpdateA0A1A2 }) => {
 
 	if (dataArr === null || dataArr.length === 0) {
 		dataArr = dataArrExample1;
 	}
 
 	const [selectedAlpha, setSelectedAlpha] = useState(0.05);
+	const [a0, setA0] = useState(null);
+	const [a1, setA1] = useState(null);
+	const [a2, setA2] = useState(null);
 
 	const handleAlphaChange = (alpha) => {
 		setSelectedAlpha(alpha);
 	};
-	// Вычисляем результаты анализа
+	const handleUpdateA0A1A2 = (newA0, newA1, newA2) => {
+		setA0(newA0);
+		setA1(newA1);
+		setA2(newA2);
+
+		onUpdateA0A1A2(newA0, newA1, newA2);
+	};
+
 	const reportData = calculateReport(dataArr, selectedAlpha, regressionType);
 
 	const roundToThreeDecimals = (value) => {
 		return Number(value.toFixed(3));
 	};
+
+	useEffect(() => {
+		handleUpdateA0A1A2(reportData.a0, reportData.a1, reportData.a2);
+	}, [reportData.a0, reportData.a1, reportData.a2]);
 
 	return (
 		<div>
