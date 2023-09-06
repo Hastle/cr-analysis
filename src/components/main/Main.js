@@ -9,7 +9,10 @@ import Visualization from '../chart/Visualization';
 
 const Main = () => {
 	const [dataArr, setDataArr] = useState(null);
-	const [selectedRegressionType, setSelectedRegressionType] = useState('straight'); // Default type
+	const [selectedRegressionType, setSelectedRegressionType] = useState('straight');
+	const [a0, setA0] = useState(null);
+	const [a1, setA1] = useState(null);
+	const [a2, setA2] = useState(null);
 
 	const handleDataArr = (arr) => {
 		const filteredDataArr = arr.filter((point) => {
@@ -55,13 +58,13 @@ const Main = () => {
 			<div className="row justify-content-center mt-3">
 				<div className="col-md-8">
 					<h4>Параметры анализа</h4>
-					<Report dataArr={dataArr} regressionType={selectedRegressionType} />
+					<Report dataArr={dataArr} regressionType={selectedRegressionType} onUpdateA0A1A2={(newA0, newA1, newA2) => { setA0(newA0); setA1(newA1); setA2(newA2); }} />
 				</div>
 			</div>
 			<div className="row justify-content-center mt-3">
 				<div className="col-md-8">
 					<h4>Визуализация данных</h4>
-					<Visualization dataArr={dataArr} onRegressionTypeChange={setSelectedRegressionType} />
+					<Visualization dataArr={dataArr} onRegressionTypeChange={setSelectedRegressionType} a0={a0} a1={a1} a2={a2} />
 				</div>
 			</div>
 		</main>
