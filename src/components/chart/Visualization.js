@@ -33,9 +33,9 @@ const Visualization = ({ dataArr, onRegressionTypeChange, a0, a1, a2}) => {
 				case 'straight':
 					return dataArr.map((item) => ({ x: item.x, y: (a0) + (a1) * item.x }));
 				case 'parabola':
-					return dataArr.map((item) => ({ x: item.x, y: item.x * item.x }));
+					return dataArr.map((item) => ({ x: item.x, y: (a0) + (a1) * item.x + (a2) * Math.pow(item.x, 2) }));
 				case 'exponential':
-					return dataArr.map((item) => ({ x: item.x, y: (a0) * Math.pow(a1, item.x )}));
+					return dataArr.map((item) => ({ x: item.x, y: (a0) * Math.pow(a1, item.x) }));
 				case 'hyperbola':
 					return dataArr.map((item) => ({ x: item.x, y: (a0) + (a1) / item.x }));
 				case 'logarithmic':
