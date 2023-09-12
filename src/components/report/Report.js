@@ -65,7 +65,7 @@ const calculateReport = (dataArr, alpha, regressionType) => {
 	const spearmanInterpretation = interpretSpearman(spearmanCoefficient);
 
 	// Calculate elasticity
-	const elasticity = calculateElasticity(xValues, yValues);
+	const elasticity = calculateElasticity(xValues, a0, a1, a2, regressionType);
 
 	// Calculate mean approximation error
 	const meanApproximationError = calculateMeanApproximationError(xValues, yValues, a0, a1);
@@ -207,6 +207,9 @@ const Report = ({ dataArr, regressionType, onUpdateA0A1A2 }) => {
 			<br/>
 			<p>t a0: {roundToThreeDecimals(reportData.tValueA0)}</p>
 			<p>t a1: {roundToThreeDecimals(reportData.tValueA1)}</p>
+			{regressionType === 'parabola' && (
+				<p>t a2: {roundToThreeDecimals(reportData.tValueA1)}</p>
+			)}
 			<br/>
 			<p>F-критерий Фишера: {roundToThreeDecimals(reportData.fisherCriterion)}</p>
 			<br/>
