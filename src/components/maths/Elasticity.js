@@ -3,7 +3,7 @@ const calculateElasticity = (xValues, a0, a1, a2, regressionType) => {
     const meanX = xValues.reduce((sum, value) => sum + value, 0) / n;
     const meanXX = xValues.reduce((sum, value) => sum + Math.pow(value, 2), 0) / n;
     if (regressionType === 'straight') {
-        return (a1 * meanX) / (a0 + a1 * meanX) ;
+        return (a1 * meanX) / (a0 + a1 * meanX);
     } else if (regressionType === 'parabola') {
         return (a1 + 2 * a2 * meanX) * meanX / (a0 + a1 * meanX + a2 * meanXX);
     } else if (regressionType === 'exponential') {
