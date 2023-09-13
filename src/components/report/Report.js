@@ -68,16 +68,16 @@ const calculateReport = (dataArr, alpha, regressionType) => {
 	const elasticity = calculateElasticity(xValues, a0, a1, a2, regressionType);
 
 	// Calculate mean approximation error
-	const meanApproximationError = calculateMeanApproximationError(xValues, yValues, a0, a1);
+	const meanApproximationError = calculateMeanApproximationError(xValues, yValues, a0, a1, a2, regressionType);
 
 	// Calculate total variance
 	const totalVariance = calculateTotalVariance(yValues);
 
 	// Calculate factor variance
-	const factorVariance = calculateFactorVariance(xValues, a0, a1, yValues);
+	const factorVariance = calculateFactorVariance(xValues, yValues, a0, a1, a2, regressionType);
 
 	// Calculate residual variance
-	const residualVariance = calculateResidualVariance(xValues, a0, a1, yValues);
+	const residualVariance = calculateResidualVariance(xValues, yValues, a0, a1, a2, regressionType);
 
 	// Calculate theoretical coefficient of determination
 	const theoreticalCoefficientOfDetermination = calculateTheoreticalCoefficientOfDetermination(factorVariance, totalVariance);
@@ -89,11 +89,12 @@ const calculateReport = (dataArr, alpha, regressionType) => {
 	const regressionEquation = calculateRegressionEquation(regressionType);
 
 	// Calculate standard errors of parameters
-	const [standardErrorA0, standardErrorA1] = calculateStandardErrorOfParameters(xValues, yValues, a0, a1);
+	const [standardErrorA0, standardErrorA1, standardErrorA2] = calculateStandardErrorOfParameters(xValues, yValues, a0, a1, a2, regressionType, residualVariance);
 
 	// Calculate t-values
 	const tValueA0 = calculateTValue(a0, standardErrorA0);
 	const tValueA1 = calculateTValue(a1, standardErrorA1);
+	const tValueA2 = calculateTValue(a1, standardErrorA2);
 
 	// Calculate Fisher criterion
 	const fisherCriterion = calculateFisherCriterion(factorVariance, residualVariance, 2, dataArr.length);
@@ -127,8 +128,10 @@ const calculateReport = (dataArr, alpha, regressionType) => {
 		a2,
 		standardErrorA0,
 		standardErrorA1,
+		standardErrorA2,
 		tValueA0,
 		tValueA1,
+		tValueA2,
 		fisherCriterion,
 		fTableValue,
 	};
@@ -190,6 +193,7 @@ const Report = ({ dataArr, regressionType, onUpdateA0A1A2 }) => {
 			<p>Общая дисперсия: {roundToThreeDecimals(reportData.totalVariance)}</p>
 			<p>Факторная дисперсия: {roundToThreeDecimals(reportData.factorVariance)}</p>
 			<p>Остаточная дисперсия: {(roundToThreeDecimals(reportData.residualVariance))}</p>
+			<p>Проверка общей дисперсии: {(roundToThreeDecimals(reportData.factorVariance + reportData.residualVariance))}</p>
 			<br/>
 			<p>Теоретический коэффициент детерминации: {roundToThreeDecimals(reportData.theoreticalCoefficientOfDetermination)}</p>
 			<p>Теоретическое корреляционное отношение: {roundToThreeDecimals(reportData.theoreticalCorrelationRatio)}</p>
@@ -204,11 +208,14 @@ const Report = ({ dataArr, regressionType, onUpdateA0A1A2 }) => {
 			<br/>
 			<p>Средняя ошибка параметров a0: {roundToThreeDecimals(reportData.standardErrorA0)}</p>
 			<p>Средняя ошибка параметров a1: {roundToThreeDecimals(reportData.standardErrorA1)}</p>
+			{regressionType === 'parabola' && (
+				<p>Средняя ошибка параметров a2: {roundToThreeDecimals(reportData.standardErrorA2)}</p>
+			)}
 			<br/>
 			<p>t a0: {roundToThreeDecimals(reportData.tValueA0)}</p>
 			<p>t a1: {roundToThreeDecimals(reportData.tValueA1)}</p>
 			{regressionType === 'parabola' && (
-				<p>t a2: {roundToThreeDecimals(reportData.tValueA1)}</p>
+				<p>t a2: {roundToThreeDecimals(reportData.tValueA2)}</p>
 			)}
 			<br/>
 			<p>F-критерий Фишера: {roundToThreeDecimals(reportData.fisherCriterion)}</p>
@@ -218,5 +225,4 @@ const Report = ({ dataArr, regressionType, onUpdateA0A1A2 }) => {
 		</div>
 	);
 };
-
 export default Report;
