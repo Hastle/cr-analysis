@@ -1,6 +1,9 @@
-const calculateTotalVariance = (yValues) => {
-    const meanY = yValues.reduce((sum, value) => sum + value, 0) / yValues.length;
-    const squaredDeviations = yValues.map((value) => Math.pow(value - meanY, 2));
-    return squaredDeviations.reduce((sum, deviation) => sum + deviation, 0);;
+const calculateTotalVarianceSquared = (yValues) => {
+    const n = yValues.length;
+    const meanY = yValues.reduce((sum, value) => sum + value, 0) / n;
+
+    const squaredDifferences = yValues.map((y) => Math.pow(y - meanY, 2));
+    const sumSquaredDifferences = squaredDifferences.reduce((sum, difference) => sum + difference, 0);
+    return sumSquaredDifferences / n;
 };
-export default calculateTotalVariance;
+export default calculateTotalVarianceSquared;
