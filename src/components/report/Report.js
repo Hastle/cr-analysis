@@ -26,7 +26,7 @@ import calculateTValue from "../maths/TValue";
 import calculateFisherCriterion from "../maths/FisherCriterion";
 import getFTableValue from "../maths/FTableValue";
 
-const calculateReport = (dataArr, alpha, regressionType) => {
+const calculateReport = (dataArr, alpha, alphaT, regressionType) => {
 
 	// Extract X and Y values from dataArr
 	const xValues = dataArr.map((item) => item.X);
@@ -94,13 +94,13 @@ const calculateReport = (dataArr, alpha, regressionType) => {
 	// Calculate t-values
 	const tValueA0 = calculateTValue(a0, standardErrorA0);
 	const tValueA1 = calculateTValue(a1, standardErrorA1);
-	const tValueA2 = calculateTValue(a1, standardErrorA2);
+	const tValueA2 = calculateTValue(a2, standardErrorA2);
 
 	// Calculate Fisher criterion
-	const fisherCriterion = calculateFisherCriterion(factorVariance, residualVariance, 2, dataArr.length);
+	const fisherCriterion = calculateFisherCriterion(factorVariance, residualVariance, regressionType, dataArr.length);
 
 	// Calculate F-table value
-	const fTableValue = getFTableValue(alpha, 2, dataArr.length);
+	const fTableValue = getFTableValue(alphaT, regressionType, dataArr.length);
 
 	// Return the report object
 	return {
@@ -110,7 +110,6 @@ const calculateReport = (dataArr, alpha, regressionType) => {
 		correlationInterpretation,
 		meanErrorOfCorrelationCoefficient,
 		correlationSignificant,
-		alpha,
 		tTable,
 		significance,
 		spearmanCoefficient,
@@ -144,12 +143,16 @@ const Report = ({ dataArr, regressionType, onUpdateA0A1A2 }) => {
 	}
 
 	const [selectedAlpha, setSelectedAlpha] = useState(0.05);
+	const [selectedTableAlpha, setSelectedTableAlpha] = useState(0.05);
 	const [a0, setA0] = useState(null);
 	const [a1, setA1] = useState(null);
 	const [a2, setA2] = useState(null);
 
 	const handleAlphaChange = (alpha) => {
 		setSelectedAlpha(alpha);
+	};
+	const handleTableAlphaChange = (alpha) => {
+		setSelectedTableAlpha(alpha);
 	};
 	const handleUpdateA0A1A2 = (newA0, newA1, newA2) => {
 		setA0(newA0);
@@ -159,7 +162,7 @@ const Report = ({ dataArr, regressionType, onUpdateA0A1A2 }) => {
 		onUpdateA0A1A2(newA0, newA1, newA2);
 	};
 
-	const reportData = calculateReport(dataArr, selectedAlpha, regressionType);
+	const reportData = calculateReport(dataArr, selectedAlpha, selectedTableAlpha, regressionType);
 
 	const roundToThreeDecimals = (value) => {
 		return Number(value.toFixed(3));
@@ -219,9 +222,9 @@ const Report = ({ dataArr, regressionType, onUpdateA0A1A2 }) => {
 			)}
 			<br/>
 			<p>F-критерий Фишера: {roundToThreeDecimals(reportData.fisherCriterion)}</p>
-			<br/>
 			<p className="inline-flex">Уровень значений F-таблицы: </p>
-			<TableValueInput/>
+			<TableValueInput selectedTableAlpha={selectedTableAlpha} onTableAlphaChange={handleTableAlphaChange} />
+			<p>F-критерий табличный: {roundToThreeDecimals(reportData.fTableValue)}</p>
 		</div>
 	);
 };
