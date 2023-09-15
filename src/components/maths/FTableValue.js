@@ -1,17 +1,11 @@
-const getFTableValue = (alpha, k, n) => {
-    // This is a placeholder implementation and should be replaced with an actual table lookup
-    // The values returned here are only for demonstration purposes and may not be accurate
-    if (alpha === 0.05) {
-        if (k === 1 && n === 10) {
-            return 4.96;
-        } else if (k === 2 && n === 10) {
-            return 3.46;
-        } else if (k === 1 && n === 20) {
-            return 4.13;
-        } else if (k === 2 && n === 20) {
-            return 3.17;
-        }
-    }
-    return null;
+import * as jstat from "jstat";
+
+const getFTableValue = (alpha, regressionType, n) => {
+    let k;
+    if (regressionType === 'parabola')
+        k = 3;
+    else
+        k = 2;
+    return jstat.centralF.inv(1 - alpha, k - 1, n);
 };
 export default getFTableValue;
