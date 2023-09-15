@@ -4,11 +4,11 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
-export default function SelectSmall() {
-	const [value, setValue] = React.useState('');
+export default function SelectSmall({ selectedTableAlpha, onTableAlphaChange }) {
 
-	const handleChange = (event) => {
-		setValue(event.target.value);
+	const handleTableAlphaChange = (event) => {
+		const alpha = event.target.value;
+		onTableAlphaChange(alpha);
 	};
 
 	return (
@@ -18,7 +18,7 @@ export default function SelectSmall() {
 			labelId="select-small-label"
 			defaultValue={0.05}
 			label="Значение"
-			onChange={handleChange}
+			onChange={handleTableAlphaChange}
 			>
 				<MenuItem value={0.01}>0.01</MenuItem>
 				<MenuItem value={0.05}>0.05</MenuItem>
