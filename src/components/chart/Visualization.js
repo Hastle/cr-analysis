@@ -1,5 +1,4 @@
 import React, {useEffect, useRef, useState} from 'react';
-import dataArrExample1 from '../../data/DataExample1';
 import {Chart, registerables} from 'chart.js';
 import ChartTypeInput from '../inputs/ChartTypeInput';
 
@@ -7,10 +6,6 @@ const Visualization = ({ dataArr, onRegressionTypeChange, a0, a1, a2}) => {
 	const chartRef = useRef(null);
 	const chartInstance = useRef(null);
 	const [selectedType, setSelectedType] = useState('straight');
-
-	if (!dataArr || dataArr.length === 0) {
-		dataArr = dataArrExample1;
-	}
 
 	function normalizeData(dataArr) {
 		dataArr = dataArr.slice().sort((a, b) => a.X - b.X);

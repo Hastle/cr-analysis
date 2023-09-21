@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
-import dataArrExample1 from '../../data/DataExample1';
 
 export default function RankTable({ dataArr }) {
 	const columns = [
@@ -12,10 +11,6 @@ export default function RankTable({ dataArr }) {
 		{ field: 'd', headerName: 'd = Nx - Ny', width: 150, editable: false },
 		{ field: 'd^2', headerName: 'd^2', width: 150, editable: false },
 	];
-
-	if (dataArr === null || dataArr.length === 0) {
-		dataArr = dataArrExample1;
-	}
 
 	function calculateValues(dataArr) {
 		// Копия массива данных

@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
-import dataArrExample1 from '../../data/DataExample1';
 
 export default function InputTable({ dataArr }) {
 	const columns = [
@@ -9,9 +8,6 @@ export default function InputTable({ dataArr }) {
 		{ field: 'Y', headerName: 'Y', width: 250, editable: true },
 	];
 
-	if (dataArr === null || dataArr.length === 0) {
-		dataArr = dataArrExample1;
-	}
 	const rows = dataArr;
 
 	return (

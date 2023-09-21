@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Styles from './report.sass';
-import dataArrExample1 from '../../data/DataExample1';
+import './report.sass';
 import SelectAlpha from '../inputs/SelectAlpha';
 import TableValueInput from '../inputs/TableValueInput';
 import calculateStandardDeviation from "../maths/StandardDeviation";
@@ -137,11 +136,6 @@ const calculateReport = (dataArr, alpha, alphaT, regressionType) => {
 };
 
 const Report = ({ dataArr, regressionType, onUpdateA0A1A2 }) => {
-
-	if (dataArr === null || dataArr.length === 0) {
-		dataArr = dataArrExample1;
-	}
-
 	const [selectedAlpha, setSelectedAlpha] = useState(0.05);
 	const [selectedTableAlpha, setSelectedTableAlpha] = useState(0.05);
 	const [a0, setA0] = useState(null);

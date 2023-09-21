@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
-import dataArrExample1 from '../../data/DataExample1';
 
 export default function IntermediateTable2({ dataArr }) {
 	const columns = [
@@ -24,10 +23,6 @@ export default function IntermediateTable2({ dataArr }) {
 	{ field: '(Y - avg(Y))^2', headerName: '(Y - avg(Y))^2', width: 150, editable: false },
 	{ field: '(f(X) - avg(Y))^2', headerName: '(f(X) - avg(Y))^2', width: 150, editable: false },
 	];
-
-	if (dataArr === null || dataArr.length === 0) {
-		dataArr = dataArrExample1;
-	}
 
 	function transformDataArray(dataArr) {
 		const transformedDataArr = [];
