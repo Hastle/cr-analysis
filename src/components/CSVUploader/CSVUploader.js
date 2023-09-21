@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import Button from '@mui/material/Button';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import './CSVUploader.sass';
 
 function CSVUploader({ onDataArr }) {
 	const [csvData, setCSVData] = useState(null);
@@ -56,9 +59,10 @@ function CSVUploader({ onDataArr }) {
 	};
 
 	return (
-		<div>
+		<Button component="label" variant="contained" startIcon={<CloudUploadIcon />}>
+			Загрузить файл
 			<input type="file" accept=".csv" onChange={handleFileChange} />
-		</div>
+		</Button>
 	);
 }
 
