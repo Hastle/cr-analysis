@@ -8,17 +8,18 @@ function CSVUploader({ onDataArr }) {
 
 	const handleFileChange = (event) => {
 		const file = event.target.files[0];
-		const reader = new FileReader();
-
-		reader.onload = (e) => {
-			const contents = e.target.result;
-			setCSVData(contents);
-			const dataArr = parseCSV(contents);
-			onDataArr(dataArr);
-		};
-
-		reader.readAsText(file);
+		if (file) {
+			const reader = new FileReader();
+			reader.onload = (e) => {
+				const contents = e.target.result;
+				setCSVData(contents);
+				const dataArr = parseCSV(contents);
+				onDataArr(dataArr);
+			};
+			reader.readAsText(file);
+		}
 	};
+
 
 	const parseCSV = (data) => {
 		let dataArr = [];
