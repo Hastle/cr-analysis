@@ -31,42 +31,46 @@ const Main = () => {
 					<CSVUploader onDataArr={handleDataArr} />
 				</div>
 			</div>
-			<div className="row justify-content-center mt-3">
-				<div className="col-md-10">
-					<h4>Таблица входных данных</h4>
-					<InputTable dataArr={dataArr} />
+			{dataArr !==null && (
+				<>
+				<div className="row justify-content-center mt-3">
+					<div className="col-md-10">
+						<h4>Таблица входных данных</h4>
+						<InputTable dataArr={dataArr} />
+					</div>
 				</div>
-			</div>
-			<div className="row justify-content-center mt-3">
-				<div className="col-md-10">
-					<h4>Таблица промежуточных вычислений 1</h4>
-					<IntermediateTable1 dataArr={dataArr} />
+				<div className="row justify-content-center mt-3">
+					<div className="col-md-10">
+						<h4>Таблица промежуточных вычислений 1</h4>
+						<IntermediateTable1 dataArr={dataArr} />
+					</div>
 				</div>
-			</div>
-			<div className="row justify-content-center mt-3">
-				<div className="col-md-10">
-					<h4>Таблица рангов</h4>
-					<RankTable dataArr={dataArr} />
+				<div className="row justify-content-center mt-3">
+					<div className="col-md-10">
+						<h4>Таблица рангов</h4>
+						<RankTable dataArr={dataArr} />
+					</div>
 				</div>
-			</div>
-			<div className="row justify-content-center mt-3">
-				<div className="col-md-10">
-					<h4>Таблица промежуточных вычислений 2</h4>
-					<IntermediateTable2 dataArr={dataArr} />
+				<div className="row justify-content-center mt-3">
+					<div className="col-md-10">
+						<h4>Таблица промежуточных вычислений 2</h4>
+						<IntermediateTable2 dataArr={dataArr} />
+					</div>
 				</div>
-			</div>
-			<div className="row justify-content-center mt-3">
-				<div className="col-md-8">
-					<h4>Параметры анализа</h4>
-					<Report dataArr={dataArr} regressionType={selectedRegressionType} onUpdateA0A1A2={(newA0, newA1, newA2) => { setA0(newA0); setA1(newA1); setA2(newA2); }} />
+				<div className="row justify-content-center mt-3">
+					<div className="col-md-8">
+						<h4>Параметры анализа</h4>
+						<Report dataArr={dataArr} regressionType={selectedRegressionType} onUpdateA0A1A2={(newA0, newA1, newA2) => { setA0(newA0); setA1(newA1); setA2(newA2); }} />
+					</div>
 				</div>
-			</div>
-			<div className="row justify-content-center mt-3">
-				<div className="col-md-8">
-					<h4>Визуализация данных</h4>
-					<Visualization dataArr={dataArr} onRegressionTypeChange={setSelectedRegressionType} a0={a0} a1={a1} a2={a2} />
+				<div className="row justify-content-center mt-3">
+					<div className="col-md-8">
+						<h4>Визуализация данных</h4>
+						<Visualization dataArr={dataArr} onRegressionTypeChange={setSelectedRegressionType} a0={a0} a1={a1} a2={a2} />
+					</div>
 				</div>
-			</div>
+				</>
+			)}
 		</main>
 	);
 };
