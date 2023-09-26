@@ -2,13 +2,16 @@ import React from 'react';
 import Sidebar from './sidebar/Sidebar';
 import Main from './main/Main';
 import Wrapper from './wrapper/Wrapper';
+import { DataProvider } from './utils/DataContext';
 
 function App() {
 	return (
-		<Wrapper>
-			<Sidebar/>
-			<Main/>
-		</Wrapper>
+		<DataProvider>
+			<Wrapper>
+				<Sidebar/>
+				<Main/>
+			</Wrapper>
+		</DataProvider>
 	);
 }
 
