@@ -2,6 +2,9 @@ import * as React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 
 export default function IntermediateTable1({ dataArr }) {
+	function roundToThreeDecimals(number) {
+		return Math.round(number * 1000) / 1000;
+	}
 	const columns = [
 		{ field: 'id', headerName: '№', width: 150, editable: false },
 		{ field: 'X', headerName: 'X', width: 150, editable: false },
@@ -13,9 +16,9 @@ export default function IntermediateTable1({ dataArr }) {
 
 	function calculateValues(dataArr) {
 		const updatedDataArr = dataArr.map((obj) => {
-			const xSquared = obj.X ** 2;
-			const ySquared = obj.Y ** 2;
-			const xyProduct = obj.X * obj.Y;
+			const xSquared = roundToThreeDecimals(obj.X ** 2);
+			const ySquared = roundToThreeDecimals(obj.Y ** 2);
+			const xyProduct = roundToThreeDecimals(obj.X * obj.Y);
 
 			return {
 				...obj,
@@ -25,11 +28,11 @@ export default function IntermediateTable1({ dataArr }) {
 			};
 		});
 		// Вычисление суммы каждого столбца
-		let sumX = updatedDataArr.reduce((total, obj) => total + obj.X, 0);
-		let sumY = updatedDataArr.reduce((total, obj) => total + obj.Y, 0);
-		let sumX2 = updatedDataArr.reduce((total, obj) => total + obj['X^2'], 0);
-		let sumY2 = updatedDataArr.reduce((total, obj) => total + obj['Y^2'], 0);
-		let sumXY = updatedDataArr.reduce((total, obj) => total + obj['XY'], 0);
+		let sumX = roundToThreeDecimals(updatedDataArr.reduce((total, obj) => total + obj.X, 0));
+		let sumY = roundToThreeDecimals(updatedDataArr.reduce((total, obj) => total + obj.Y, 0));
+		let sumX2 = roundToThreeDecimals(updatedDataArr.reduce((total, obj) => total + obj['X^2'], 0));
+		let sumY2 = roundToThreeDecimals(updatedDataArr.reduce((total, obj) => total + obj['Y^2'], 0));
+		let sumXY = roundToThreeDecimals(updatedDataArr.reduce((total, obj) => total + obj['XY'], 0));
 
 		// Создание объекта с суммами
 		const sums = {
@@ -42,17 +45,11 @@ export default function IntermediateTable1({ dataArr }) {
 		};
 
 		// Вычисление среднего значения каждого столбца
-		let avgX = sumX / updatedDataArr.length;
-		let avgY = sumY / updatedDataArr.length;
-		let avgX2 = sumX2 / updatedDataArr.length;
-		let avgY2 = sumY2 / updatedDataArr.length;
-		let avgXY = sumXY / updatedDataArr.length;
-
-		avgX = avgX.toFixed(3);
-		avgY = avgY.toFixed(3);
-		avgX2 = avgX2.toFixed(3);
-		avgY2 = avgY2.toFixed(3);
-		avgXY = avgXY.toFixed(3);
+		let avgX = roundToThreeDecimals(sumX / updatedDataArr.length);
+		let avgY = roundToThreeDecimals(sumY / updatedDataArr.length);
+		let avgX2 = roundToThreeDecimals(sumX2 / updatedDataArr.length);
+		let avgY2 = roundToThreeDecimals(sumY2 / updatedDataArr.length);
+		let avgXY = roundToThreeDecimals(sumXY / updatedDataArr.length);
 
 		// Создание объекта со средними значениями
 		const averages = {

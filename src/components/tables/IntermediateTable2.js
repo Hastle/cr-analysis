@@ -2,6 +2,9 @@ import * as React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 
 export default function IntermediateTable2({ dataArr }) {
+	function roundToThreeDecimals(number) {
+		return Math.round(number * 1000) / 1000;
+	}
 	const columns = [
 	{ field: 'id', headerName: '№', width: 150, editable: false },
 	{ field: 'X', headerName: 'X', width: 150, editable: false },
@@ -17,11 +20,11 @@ export default function IntermediateTable2({ dataArr }) {
 	{ field: '1 / X', headerName: '1 / X', width: 150, editable: false },
 	{ field: '1 / X^2', headerName: '1 / X^2', width: 150, editable: false },
 	{ field: 'Y / X', headerName: 'Y / X', width: 150, editable: false },
-	{ field: 'f(X)', headerName: 'f(X)', width: 150, editable: false },
-	{ field: '|Y - f(X)|', headerName: '|Y - f(X)|', width: 150, editable: false },
-	{ field: '(Y - f(X))^2', headerName: '(Y - f(X))^2', width: 150, editable: false },
-	{ field: '(Y - avg(Y))^2', headerName: '(Y - avg(Y))^2', width: 150, editable: false },
-	{ field: '(f(X) - avg(Y))^2', headerName: '(f(X) - avg(Y))^2', width: 150, editable: false },
+	// { field: 'f(X)', headerName: 'f(X)', width: 150, editable: false },
+	// { field: '|Y - f(X)|', headerName: '|Y - f(X)|', width: 150, editable: false },
+	// { field: '(Y - f(X))^2', headerName: '(Y - f(X))^2', width: 150, editable: false },
+	// { field: '(Y - avg(Y))^2', headerName: '(Y - avg(Y))^2', width: 150, editable: false },
+	// { field: '(f(X) - avg(Y))^2', headerName: '(f(X) - avg(Y))^2', width: 150, editable: false },
 	];
 
 	function transformDataArray(dataArr) {
@@ -33,17 +36,17 @@ export default function IntermediateTable2({ dataArr }) {
 				id: originalObj.id,
 				X: originalObj.X,
 				Y: originalObj.Y,
-				'X^3': Math.pow(originalObj.X, 3),
-				'X^4': Math.pow(originalObj.X, 4),
-				'X^2 * Y': originalObj.X ** 2 * originalObj.Y,
-				'ln(Y)': parseFloat(Math.log(originalObj.Y).toFixed(3)),
-				'X * ln(Y)': parseFloat((originalObj.X * Math.log(originalObj.Y)).toFixed(3)),
-				'ln(X)': parseFloat(Math.log(originalObj.X).toFixed(3)),
-				'(ln(X))^2': parseFloat(Math.pow(Math.log(originalObj.X), 2).toFixed(3)),
-				'Y * ln(X)': parseFloat((originalObj.Y * Math.log(originalObj.X)).toFixed(3)),
-				'1 / X': parseFloat((1 / originalObj.X).toFixed(8)),
-				'1 / X^2': parseFloat((1 / Math.pow(originalObj.X, 2)).toFixed(8)),
-				'Y / X': parseFloat((originalObj.Y / originalObj.X).toFixed(3)),
+				'X^3': roundToThreeDecimals(Math.pow(originalObj.X, 3)),
+				'X^4': roundToThreeDecimals(Math.pow(originalObj.X, 4)),
+				'X^2 * Y': roundToThreeDecimals(originalObj.X ** 2 * originalObj.Y),
+				'ln(Y)': roundToThreeDecimals(parseFloat(Math.log(originalObj.Y))),
+				'X * ln(Y)': roundToThreeDecimals(parseFloat((originalObj.X * Math.log(originalObj.Y)))),
+				'ln(X)': roundToThreeDecimals(parseFloat(Math.log(originalObj.X))),
+				'(ln(X))^2': roundToThreeDecimals(parseFloat(Math.pow(Math.log(originalObj.X), 2))),
+				'Y * ln(X)': roundToThreeDecimals(parseFloat((originalObj.Y * Math.log(originalObj.X)))),
+				'1 / X': roundToThreeDecimals(parseFloat((1 / originalObj.X))),
+				'1 / X^2': roundToThreeDecimals(parseFloat((1 / Math.pow(originalObj.X, 2)))),
+				'Y / X': roundToThreeDecimals(parseFloat((originalObj.Y / originalObj.X))),
 				'f(X)': '', // Замените это поле соответствующими значениями функции f(X)
 				'|Y - f(X)|': '', // Замените это поле соответствующими значениями |Y - f(X)|
 				'(Y - f(X))^2': '', // Замените это поле соответствующими значениями (Y - f(X))^2
