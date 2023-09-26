@@ -3,7 +3,21 @@
 .navigation
 	display: flex
 	position: fixed !important
-	align-items: flex-start
+	flex-direction: column
+	align-items: center
+	justify-content: space-between
 	background-color: $grey
 	//border-right: 1px solid $border
 	height: 100%
+.links-layer
+	display: flex
+	flex-direction: column
+	button
+		color: $black
+		+regular
+		border-bottom: 2px solid transparent
+		padding: 10px 0
+		+flow
+		&:hover
+			border-bottom: 2px solid $acent
+			+flow
